@@ -72,7 +72,6 @@ vim.o.confirm = true
 -- Fold using treesitter
 vim.opt.foldmethod = 'expr'
 vim.opt.foldexpr = 'v:lua.vim.treesitter.foldexpr()'
-vim.opt.foldtext = 'v:lua.vim.treesitter.foldtext()'
 vim.opt.foldcolumn = '1'
 vim.opt.foldlevel = 99
 vim.opt.foldlevelstart = 99
@@ -84,6 +83,13 @@ vim.keymap.set('n', '<leader><Left>', 'zc', { desc = 'Close fold under cursor' }
 vim.keymap.set('n', '<leader><leader><Right>', 'zR', { desc = 'Open all folds' })
 -- Close all folds on <leader><leader><Left>
 vim.keymap.set('n', '<leader><leader><Left>', 'zM', { desc = 'Close all folds' })
+vim.opt.fillchars = {
+  foldopen = '',
+  foldclose = '',
+  foldsep = '│',
+  fold = ' ',
+  eob = ' ',
+}
 --------------------------------------------------------------------------------
 
 -- Setup lazy.nvim
@@ -355,7 +361,6 @@ require('lazy').setup({
       'kevinhwang91/nvim-ufo',
       dependencies = {
         'kevinhwang91/promise-async',
-        'nvim-treesitter/nvim-treesitter',
       },
       opts = {
         provider_selector = function(bufnr, filetype, buftype)
