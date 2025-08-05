@@ -68,6 +68,22 @@ vim.o.scrolloff = 10
 
 -- Instead of failing an operation for an unsaved buffer, have a save dialog
 vim.o.confirm = true
+
+-- Fold using treesitter
+vim.opt.foldmethod = 'expr'
+vim.opt.foldexpr = 'v:lua.vim.treesitter.foldexpr()'
+vim.opt.foldtext = 'v:lua.vim.treesitter.foldtext()'
+vim.opt.foldcolumn = '1'
+vim.opt.foldlevel = 99
+vim.opt.foldlevelstart = 99
+-- 'zo' on <leader><Right> to open folds
+vim.keymap.set('n', '<leader><Right>', 'zo', { desc = 'Open fold under cursor' })
+-- 'zc' on <leader><Left> to close folds
+vim.keymap.set('n', '<leader><Left>', 'zc', { desc = 'Close fold under cursor' })
+-- Open all folds on <leader><leader><Right>
+vim.keymap.set('n', '<leader><leader><Right>', 'zR', { desc = 'Open all folds' })
+-- Close all folds on <leader><leader><Left>
+vim.keymap.set('n', '<leader><leader><Left>', 'zM', { desc = 'Close all folds' })
 --------------------------------------------------------------------------------
 
 -- Setup lazy.nvim
@@ -332,10 +348,23 @@ require('lazy').setup({
         signature = { enabled = true },
       },
     },
+    -- Highlight todo, notes, etc in comments
+    { 'folke/todo-comments.nvim', event = 'VimEnter', dependencies = { 'nvim-lua/plenary.nvim' }, opts = { signs = false } },
+    -- nvim-ufo for folding
+    {
+      'kevinhwang91/nvim-ufo',
+      dependencies = {
+        'kevinhwang91/promise-async',
+        'nvim-treesitter/nvim-treesitter',
+      },
+      opts = {
+        provider_selector = function(bufnr, filetype, buftype)
+          return { 'treesitter', 'indent' }
+        end,
+      },
+    },
     -- TODO: LSP for C#
     -- TODO: Debugging
-    -- TODO: Autocompletion
-    -- TODO: Highlight TODO and such in comments
     --------------------------------------------------------------------------------
   },
   checker = { enabled = true },
