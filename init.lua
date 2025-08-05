@@ -79,6 +79,7 @@ require('lazy').setup({
       'folke/tokyonight.nvim',
       priority = 1000,
       config = function()
+        ---@diagnostic disable-next-line: missing-fields
         require('tokyonight').setup({
           styles = {
             comments = { italic = false },
@@ -260,6 +261,77 @@ require('lazy').setup({
         },
       },
     },
+    -- File-browser
+    {
+      'nvim-neo-tree/neo-tree.nvim',
+      branch = 'v3.x',
+      dependencies = {
+        'nvim-lua/plenary.nvim',
+        'MunifTanjim/nui.nvim',
+        'nvim-tree/nvim-web-devicons', -- optional, but recommended
+      },
+      lazy = false, -- neo-tree will lazily load itself
+      config = function()
+        -- Neo-tree config
+        require('neo-tree').setup({
+          --- @module 'neo-tree'
+          --- @type neotree.Config
+          filesystem = {
+            filtered_items = {
+              visible = true,
+              hide_dotfiles = false,
+              hide_gitignored = false,
+            },
+          },
+        })
+        -- Toggle on <leader>s
+        vim.keymap.set('n', '<leader>s', ':Neotree toggle<CR>', { noremap = true, silent = true })
+      end,
+    },
+    -- Autocompletion
+    {
+      'saghen/blink.cmp',
+      event = 'VimEnter',
+      version = '1.*',
+      dependencies = {
+        -- Snippet Engine
+        {
+          'L3MON4D3/LuaSnip',
+          version = '2.*',
+          build = (function()
+            if vim.fn.has('win32') == 1 or vim.fn.executable('make') == 0 then
+              return
+            end
+            return 'make install_jsregexp'
+          end)(),
+          dependencies = {},
+          opts = {},
+        },
+        'folke/lazydev.nvim',
+      },
+      --- @module 'blink.cmp'
+      --- @type blink.cmp.Config
+      opts = {
+        keymap = {
+          preset = 'default',
+        },
+        appearance = {
+          nerd_font_variant = 'mono',
+        },
+        completion = {
+          documentation = { auto_show = false, auto_show_delay_ms = 500 },
+        },
+        sources = {
+          default = { 'lsp', 'path', 'snippets', 'lazydev' },
+          providers = {
+            lazydev = { module = 'lazydev.integrations.blink', score_offset = 100 },
+          },
+        },
+        snippets = { preset = 'luasnip' },
+        fuzzy = { implementation = 'lua' },
+        signature = { enabled = true },
+      },
+    },
     -- TODO: LSP for C#
     -- TODO: Debugging
     -- TODO: Autocompletion
@@ -268,3 +340,6 @@ require('lazy').setup({
   },
   checker = { enabled = true },
 })
+
+-- Modeline
+-- vim: ts=2 sts=2 sw=2 et
