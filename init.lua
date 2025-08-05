@@ -168,7 +168,7 @@ require('lazy').setup({
         },
       },
     },
-    -- LSP setup for Lua
+    -- Generic LSP setup
     {
       'neovim/nvim-lspconfig',
       dependencies = {
@@ -367,6 +367,23 @@ require('lazy').setup({
           return { 'treesitter', 'indent' }
         end,
       },
+    },
+    -- Mason
+    {
+      'mason-org/mason.nvim',
+      opts = {
+        registries = {
+          'github:mason-org/mason-registry',
+          'github:Crashdummyy/mason-registry',
+        },
+      },
+    },
+    -- C# language support
+    {
+      'seblyng/roslyn.nvim',
+      --- @module 'roslyn.config'
+      --- @type RoslynNvimConfig
+      opts = {},
     },
     -- TODO: LSP for C#
     -- TODO: Debugging
