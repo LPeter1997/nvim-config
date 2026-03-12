@@ -58,10 +58,10 @@ vim.o.list = true
 vim.opt.listchars = { tab = '» ', trail = '·', nbsp = '␣' }
 
 -- Debugger signs
-vim.fn.sign_define("DapBreakpoint", { text = "", texthl = "Debug", linehl = "", numhl = "" })
-vim.fn.sign_define("DapBreakpointCondition", { text = "", texthl = "Debug", linehl = "", numhl = "" })
-vim.fn.sign_define("DapLogPoint", { text = "", texthl = "Debug", linehl = "", numhl = "" })
-vim.fn.sign_define("DapStopped", { text = "", texthl = "Debug", linehl = "", numhl = "" })
+vim.fn.sign_define('DapBreakpoint', { text = '', texthl = 'Debug', linehl = '', numhl = '' })
+vim.fn.sign_define('DapBreakpointCondition', { text = '', texthl = 'Debug', linehl = '', numhl = '' })
+vim.fn.sign_define('DapLogPoint', { text = '', texthl = 'Debug', linehl = '', numhl = '' })
+vim.fn.sign_define('DapStopped', { text = '', texthl = 'Debug', linehl = '', numhl = '' })
 
 -- Preview replace effect
 vim.o.inccommand = 'split'
@@ -138,6 +138,28 @@ require('lazy').setup({
         vim.cmd.colorscheme('tokyonight-night')
       end,
     },
+    -- Git integration
+    {
+      'NeogitOrg/neogit',
+      lazy = true,
+      dependencies = {
+        'nvim-lua/plenary.nvim', -- required
+
+        -- Only one of these is needed.
+        'sindrets/diffview.nvim', -- optional
+        'esmuellert/codediff.nvim', -- optional
+
+        -- Only one of these is needed.
+        'nvim-telescope/telescope.nvim', -- optional
+        'ibhagwan/fzf-lua', -- optional
+        'nvim-mini/mini.pick', -- optional
+        'folke/snacks.nvim', -- optional
+      },
+      cmd = 'Neogit',
+      keys = {
+        { '<leader>gg', '<cmd>Neogit<cr>', desc = 'Show Neogit UI' },
+      },
+    },
     -- Various small plugins collection
     {
       'echasnovski/mini.nvim',
@@ -146,6 +168,25 @@ require('lazy').setup({
         local statusline = require('mini.statusline')
         statusline.setup({ use_icons = vim.g.have_nerd_font })
       end,
+    },
+    -- For keymaps
+    {
+      'folke/which-key.nvim',
+      event = 'VeryLazy',
+      opts = {
+        -- your configuration comes here
+        -- or leave it empty to use the default settings
+        -- refer to the configuration section below
+      },
+      keys = {
+        {
+          '<leader>?',
+          function()
+            require('which-key').show({ global = false })
+          end,
+          desc = 'Buffer Local Keymaps (which-key)',
+        },
+      },
     },
     -- Auto-detect indentation
     'NMAC427/guess-indent.nvim',
@@ -157,11 +198,12 @@ require('lazy').setup({
     -- Telescope for fuzzy finding basically everything
     {
       'nvim-telescope/telescope.nvim',
-      tag = '0.1.8',
       dependencies = {
         'nvim-lua/plenary.nvim',
         { 'nvim-telescope/telescope-ui-select.nvim' },
         { 'nvim-tree/nvim-web-devicons', enabled = vim.g.have_nerd_font },
+        -- optional but recommended
+        { 'nvim-telescope/telescope-fzf-native.nvim', build = 'make' },
       },
       config = function()
         require('telescope').setup({
@@ -274,8 +316,9 @@ require('lazy').setup({
     -- Treesitter for syntax highlighting and more
     {
       'nvim-treesitter/nvim-treesitter',
+      -- Does not support lazy loading
+      lazy = false,
       build = ':TSUpdate',
-      main = 'nvim-treesitter.configs',
       opts = {
         ensure_installed = {
           'lua',
