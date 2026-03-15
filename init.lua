@@ -140,24 +140,23 @@ require('lazy').setup({
     },
     -- Git integration
     {
-      'NeogitOrg/neogit',
+      'kdheepak/lazygit.nvim',
       lazy = true,
-      dependencies = {
-        'nvim-lua/plenary.nvim', -- required
-
-        -- Only one of these is needed.
-        'sindrets/diffview.nvim', -- optional
-        'esmuellert/codediff.nvim', -- optional
-
-        -- Only one of these is needed.
-        'nvim-telescope/telescope.nvim', -- optional
-        'ibhagwan/fzf-lua', -- optional
-        'nvim-mini/mini.pick', -- optional
-        'folke/snacks.nvim', -- optional
+      cmd = {
+        'LazyGit',
+        'LazyGitConfig',
+        'LazyGitCurrentFile',
+        'LazyGitFilter',
+        'LazyGitFilterCurrentFile',
       },
-      cmd = 'Neogit',
+      -- optional for floating window border decoration
+      dependencies = {
+        'nvim-lua/plenary.nvim',
+      },
+      -- setting the keybinding for LazyGit with 'keys' is recommended in
+      -- order to load the plugin when the command is run for the first time
       keys = {
-        { '<leader>gg', '<cmd>Neogit<cr>', desc = 'Show Neogit UI' },
+        { '<leader>gg', '<cmd>LazyGit<cr>', desc = 'LazyGit' },
       },
     },
     -- Various small plugins collection
@@ -194,6 +193,23 @@ require('lazy').setup({
     {
       'github/copilot.vim',
       lazy = false,
+    },
+    -- Copilot chat
+    {
+      'CopilotC-Nvim/CopilotChat.nvim',
+      dependencies = {
+        { 'nvim-lua/plenary.nvim', branch = 'master' },
+      },
+      build = 'make tiktoken',
+      opts = {
+        model = 'gpt-4.1', -- AI model to use
+        temperature = 0.1, -- Lower = focused, higher = creative
+        window = {
+          layout = 'vertical', -- 'vertical', 'horizontal', 'float'
+          width = 0.3, -- 30% of screen width
+        },
+        auto_insert_mode = true, -- Enter insert mode when opening
+      },
     },
     -- Telescope for fuzzy finding basically everything
     {
